@@ -186,6 +186,7 @@
     props: {
       onRefresh: Function,
       onInfinite: Function,
+      onLoad: Function,
 
       refreshText: {
         type: String,
@@ -270,6 +271,7 @@
         loadingState: 0, // 0: stop, 1: loading, 2: stopping loading
 
         showLoading: false,
+        isLoading: false,
 
         container: undefined,
         content: undefined,
@@ -336,7 +338,7 @@
             this.onInfinite(this.finishInfinite)
           }
 
-        }, 10);
+        }, 10)
       }
 
       // setup scroller
@@ -366,19 +368,19 @@
           content_height = height
           this.resize()
         }
-      }, 10);
+      }, 10)
     },
 
     destroyed() {
-      clearInterval(this.resizeTimer);
-      if (this.infiniteTimer) clearInterval(this.infiniteTimer);
+      clearInterval(this.resizeTimer)
+      if (this.infiniteTimer) clearInterval(this.infiniteTimer)
     },
 
     methods: {
       resize() {
-        let container = this.container;
-        let content = this.content;
-        this.scroller.setDimensions(container.clientWidth, container.clientHeight, content.offsetWidth, content.offsetHeight);
+        let container = this.container
+        let content = this.content
+        this.scroller.setDimensions(container.clientWidth, container.clientHeight, content.offsetWidth, content.offsetHeight)
       },
 
       finishPullToRefresh() {
@@ -417,6 +419,15 @@
       touchMove(e) {
         e.preventDefault()
         this.scroller.doTouchMove(e.touches, e.timeStamp)
+
+        let {top} = this.scroller.getValues()
+        const isAtBottom = top + 60 > this.content.offsetHeight - this.container.clientHeight
+        if (isAtBottom && typeof this.onLoad === 'function' && !this.isLoading) {
+          this.isLoading = true
+          this.onLoad((isNext = true) => {
+            this.isLoading = !isNext
+          })
+        }
       },
 
       touchEnd(e) {
@@ -466,8 +477,8 @@
 
       resetLoadingState() {
         let {left, top, zoom} = this.scroller.getValues()
-        let container = this.container;
-        let content = this.content;
+        let container = this.container
+        let content = this.content
 
         if (top + 60 > this.content.offsetHeight - this.container.clientHeight) {
           setTimeout(() => {
