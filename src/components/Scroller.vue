@@ -31,6 +31,7 @@
           <slot name="infinite-spinner">
             <spinner :style="{fill: loadingLayerColor, stroke: loadingLayerColor}"></spinner>
           </slot>
+          正在加载
         </span>
 
         <div class="no-data-text"
@@ -121,6 +122,7 @@
   ._v-container > ._v-content > .pull-to-refresh-layer .spinner-holder,
   ._v-container > ._v-content > .loading-layer .spinner-holder {
     text-align: center;
+    font-size: 15px;
     -webkit-font-smoothing: antialiased;
   }
 
@@ -149,10 +151,12 @@
   ._v-container > ._v-content > .pull-to-refresh-layer .spinner-holder .spinner,
   ._v-container > ._v-content > .loading-layer .spinner-holder .spinner {
     margin-top: 14px;
-    width: 32px;
-    height: 32px;
+    width: 15px;
+    height: 15px;
     fill: #444;
     stroke: #69717d;
+    position: relative;
+    top: 2px;
   }
 
   ._v-container > ._v-content > .pull-to-refresh-layer.active .spinner-holder .arrow {
